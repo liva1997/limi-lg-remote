@@ -1,66 +1,37 @@
-
 <!DOCTYPE html>
 <html lang="sq">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#111111">
+<meta name="theme-color" content="#101010">
 <title>LIMI LG REMOTE</title>
 <style>
 *{box-sizing:border-box}
-body{
- margin:0;background:#101010;color:white;
- font-family:Arial,sans-serif;padding:20px;
-}
+body{margin:0;background:#101010;color:white;font-family:Arial,sans-serif;padding:18px}
 .app{max-width:440px;margin:auto}
 header{text-align:center;padding:18px}
 h1{font-size:30px;margin:0}
 h1 span{color:#ef3333}
 .sub{color:#999;font-size:12px;margin-top:8px}
-.status{
- background:#202020;border-radius:12px;padding:12px;
- text-align:center;margin:10px 0 20px;font-size:13px;
-}
+.status{background:#202020;border-radius:12px;padding:13px;text-align:center;margin:10px 0 20px;font-size:13px}
 .dot{color:#ff4545}
+.dot.on{color:#42d66b}
 .tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
-button{
- border:0;cursor:pointer;color:white;
- background:#292929;border-radius:12px;
- padding:14px 7px;font-size:13px;
-}
+button{border:0;cursor:pointer;color:white;background:#292929;border-radius:12px;padding:14px 7px;font-size:13px}
 button:active{background:#a82020}
-.tabs button.active{background:#c62828}
-.panel{
- background:#202020;border-radius:18px;
- padding:20px;margin-top:18px;text-align:center;
-}
+.tabs button.active,.red{background:#c62828}
+.panel{background:#202020;border-radius:18px;padding:20px;margin-top:18px;text-align:center}
 h2{font-size:19px;margin-top:0}
-.power{
- background:#c62828;border-radius:50%;
- width:58px;height:58px;font-size:25px;
-}
-.pad{
- background:#303030;border:2px solid #444;
- height:210px;border-radius:20px;
- display:flex;align-items:center;justify-content:center;
- touch-action:none;color:#aaa;margin:18px 0;
-}
-.controls{display:flex;justify-content:center;gap:12px;margin:15px 0}
-.controls button{min-width:75px}
-.nav{
- display:grid;grid-template-columns:repeat(3,65px);
- justify-content:center;gap:8px;margin:20px auto;
-}
+.power{background:#c62828;border-radius:50%;width:58px;height:58px;font-size:25px}
+.nav{display:grid;grid-template-columns:repeat(3,65px);justify-content:center;gap:8px;margin:20px auto}
 .nav button{height:52px;font-size:21px}
-input{
- width:100%;padding:15px;border-radius:10px;
- border:1px solid #555;background:#303030;
- color:white;font-size:16px;margin:10px 0;
-}
-.red{background:#c62828}
+.controls{display:flex;justify-content:center;gap:10px;margin:15px 0}
+.controls button{min-width:75px}
+input{width:100%;padding:15px;border-radius:10px;border:1px solid #555;background:#303030;color:white;font-size:16px;margin:10px 0}
 .note{font-size:12px;color:#aaa;line-height:1.6}
 .hidden{display:none}
 footer{text-align:center;color:#777;font-size:11px;margin:25px}
+button:disabled{opacity:.45}
 </style>
 </head>
 <body>
@@ -71,7 +42,8 @@ footer{text-align:center;color:#777;font-size:11px;margin:25px}
 </header>
 
 <div class="status">
-<span class="dot">●</span> Nuk është lidhur me televizorin
+<span class="dot" id="dot">●</span>
+<span id="statusText">Duke kontrolluar lidhjen...</span>
 <br><small>LG 43UR781C0LC · 192.168.1.105</small>
 </div>
 
@@ -84,57 +56,49 @@ footer{text-align:center;color:#777;font-size:11px;margin:25px}
 
 <section id="remote" class="panel">
 <h2>Telekomanda</h2>
-<button class="power" onclick="notice()">⏻</button>
+<button class="power" onclick="powerOff()">⏻</button>
 <div class="nav">
-<button></button>
-<button onclick="notice()">▲</button>
-<button></button>
-<button onclick="notice()">◀</button>
-<button class="red" onclick="notice()">OK</button>
-<button onclick="notice()">▶</button>
-<button onclick="notice()">⌂</button>
-<button onclick="notice()">▼</button>
-<button onclick="notice()">↩</button>
+<button disabled></button>
+<button onclick="key('UP')">▲</button>
+<button disabled></button>
+<button onclick="key('LEFT')">◀</button>
+<button class="red" onclick="key('ENTER')">OK</button>
+<button onclick="key('RIGHT')">▶</button>
+<button onclick="key('HOME')">⌂</button>
+<button onclick="key('DOWN')">▼</button>
+<button onclick="key('BACK')">↩</button>
 </div>
 <div class="controls">
-<button onclick="notice()">VOL −</button>
-<button onclick="notice()">MUTE</button>
-<button onclick="notice()">VOL +</button>
+<button onclick="key('VOLUMEDOWN')">VOL −</button>
+<button onclick="key('MUTE')">MUTE</button>
+<button onclick="key('VOLUMEUP')">VOL +</button>
 </div>
 <div class="controls">
-<button onclick="notice()">CH −</button>
-<button onclick="notice()">CH +</button>
+<button onclick="key('CHANNELDOWN')">CH −</button>
+<button onclick="key('CHANNELUP')">CH +</button>
 </div>
+<p class="note">Komandat dërgohen përmes serverit LIMI në laptop.</p>
 </section>
 
 <section id="mouse" class="panel hidden">
 <h2>Mouse / Touchpad</h2>
-<div class="pad" id="pad">
-Lëviz gishtin këtu
-</div>
-<div class="controls">
-<button onclick="notice()">LEFT CLICK</button>
-<button onclick="notice()">RIGHT CLICK</button>
-</div>
-<p class="note">Touchpad demonstrues. Komandat e mausit do të aktivizohen pas lidhjes reale me TV.</p>
+<p class="note">Kontrolli i mausit do të aktivizohet në një përditësim të ardhshëm.</p>
 </section>
 
 <section id="keyboard" class="panel hidden">
 <h2>Tastiera</h2>
 <input id="typing" placeholder="Shkruaj këtu...">
-<button class="red" onclick="notice()">DËRGO NË TV</button>
-<p class="note">Futja e tekstit në televizor kërkon lidhjen me webOS.</p>
+<p class="note">Dërgimi i tekstit në TV do të shtohet më vonë.</p>
 </section>
 
 <section id="youtube" class="panel hidden">
 <h2>YouTube</h2>
-<input id="search" placeholder="Çfarë dëshiron të kërkosh?">
-<button class="red" onclick="notice()">KËRKO NË TV</button>
 <div class="controls">
-<button onclick="notice()">▶ PLAY</button>
-<button onclick="notice()">Ⅱ PAUSE</button>
-<button onclick="notice()">⏭ NEXT</button>
+<button onclick="key('PLAY')">▶ PLAY</button>
+<button onclick="key('PAUSE')">Ⅱ PAUSE</button>
+<button onclick="key('STOP')">■ STOP</button>
 </div>
+<p class="note">Hap YouTube në televizor me butonin HOME dhe navigimin.</p>
 </section>
 
 <footer>LIMI LG REMOTE · BLACK & RED EDITION</footer>
@@ -142,25 +106,52 @@ Lëviz gishtin këtu
 
 <script>
 function show(id,btn){
- document.querySelectorAll('.panel').forEach(
-  p=>p.classList.add('hidden')
- );
+ document.querySelectorAll('.panel').forEach(p=>p.classList.add('hidden'));
  document.getElementById(id).classList.remove('hidden');
- document.querySelectorAll('.tabs button').forEach(
-  b=>b.classList.remove('active')
- );
+ document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
  btn.classList.add('active');
 }
-function notice(){
- alert('LIMI LG REMOTE: Lidhja reale me televizorin do te aktivizohet ne hapin tjeter.');
+
+async function key(name){
+ try{
+  const r=await fetch('/api/key',{
+   method:'POST',
+   headers:{'Content-Type':'application/json'},
+   body:JSON.stringify({key:name})
+  });
+  const data=await r.json();
+  if(!r.ok) throw new Error(data.error||'Komanda nuk u dërgua');
+ }catch(e){
+  alert('LIMI: '+e.message);
+ }
 }
-const pad=document.getElementById('pad');
-pad.addEventListener('pointermove',()=>{
- pad.style.borderColor='#c62828';
-});
-pad.addEventListener('pointerup',()=>{
- pad.style.borderColor='#444';
-});
+
+async function powerOff(){
+ if(!confirm('Dëshiron ta fikësh televizorin LG?')) return;
+ try{
+  const r=await fetch('/api/power/off',{method:'POST'});
+  const data=await r.json();
+  if(!r.ok) throw new Error(data.error||'Gabim');
+ }catch(e){
+  alert('LIMI: '+e.message);
+ }
+}
+
+async function checkStatus(){
+ try{
+  const r=await fetch('/api/status');
+  const data=await r.json();
+  const connected=data.connected && data.remoteReady;
+  document.getElementById('dot').className=connected?'dot on':'dot';
+  document.getElementById('statusText').textContent=
+   connected?'Lidhur me televizorin LG':'Serveri aktiv, kontrollo lidhjen me TV';
+ }catch(e){
+  document.getElementById('dot').className='dot';
+  document.getElementById('statusText').textContent='Serveri nuk u gjet';
+ }
+}
+checkStatus();
+setInterval(checkStatus,4000);
 </script>
 </body>
 </html>
